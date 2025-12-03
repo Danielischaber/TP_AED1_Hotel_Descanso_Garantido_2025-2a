@@ -90,76 +90,76 @@ Listar estadias por cliente
 Calcular pontos de fidelidade
 
 --Backlog do Produto--
-[ ]Cadastro de cliente
-[ ]Cadastro de funcionário
-[ ]Cadastro de quarto
-[ ]Cadastro de estadia
-[ ]Cálculo de diárias
-[ ]Baixa de estadia
-[ ]Pesquisas por nome e código
-[ ]Fidelidade
-[ ]Relatórios
-[ ]Persistência em arquivos binários
-[ ]Menu principal
+-[ ]Cadastro de cliente-
+-[ ]Cadastro de funcionário-
+-[ ]Cadastro de quarto-
+-[ ]Cadastro de estadia-
+-[ ]Cálculo de diárias-
+-[ ]Baixa de estadia-
+-[ ]Pesquisas por nome e código-
+-[ ]Fidelidade-
+-[ ]Relatórios-
+-[ ]Persistência em arquivos binários-
+-[ ]Menu principal-
 
 Sprints do Projeto (Daniel, Vinicius e Marco)
  Sprint 1 – Base e Cadastros
 
  Daniel
 
-[ ]Estruturas (struct)
-[ ]Arquivos .dat
-[ ]Cadastro de clientes
-[ ]Código automático
-[ ]Caso de teste de cliente
-[ ]Função case_insensitive_search()
+-[ ]Estruturas (struct)
+-[ ]Arquivos .dat
+-[ ]Cadastro de clientes
+-[ ]Código automático
+-[ ]Caso de teste de cliente
+-[ ]Função case_insensitive_search()
 
  Vinicius
 
-[ ]Cadastro de funcionário
-[ ]Validação de código
-[ ]Teste do módulo
+-[ ]Cadastro de funcionário
+-[ ]Validação de código
+-[ ]Teste do módulo
 
  Marco
 
-[ ]Cadastro de quarto
-[ ]Validação de número
-[ ]Status inicial
-[ ]Teste do módulo
+-[ ]Cadastro de quarto
+-[ ]Validação de número
+-[ ]Status inicial
+-[ ]Teste do módulo
 
 Sprint 2 – Lógica Avançada
 
  Daniel
 
-[ ]Cadastro de estadia
-[ ]Verificação de disponibilidade
-[ ]diff_days()
-[ ]encontrar_quarto_disponivel()
-[ ]Atualização de status
-[ ]Teste da função
+-[ ]Cadastro de estadia
+-[ ]Verificação de disponibilidade
+-[ ]diff_days()
+-[ ]encontrar_quarto_disponivel()
+-[ ]Atualização de status
+-[ ]Teste da função
 
  Vinicius
 
-[ ]Baixa de estadia
-[ ]Cálculo de valor total
-[ ]Atualização de status
-[ ]Testes
+-[ ]Baixa de estadia
+-[ ]Cálculo de valor total
+-[ ]Atualização de status
+-[ ]Testes
 
  Marco
 
-[ ]Pesquisas (cliente/funcionários
-[ ]Relatórios
-[ ]Fidelidades
-[ ]Testes
+-[ ]Pesquisas (cliente/funcionários-
+-[ ]Relatórios
+-[ ]Fidelidades
+-[ ]Testes
 
 --Como Executar no Code::Blocks--
 
-Método recomendado:
+-Método recomendado:-
 
-Abrir o projeto .cbp (ou criar um novo)
-Criar/abrir o arquivo main.c
-Adicionar o código completo
-Pressionar F9 para compilar e executar
+-Abrir o projeto .cbp (ou criar um novo)
+-Criar/abrir o arquivo main.c
+-Adicionar o código completo
+-Pressionar F9 para compilar e executar
 
 --Observações:--
 
