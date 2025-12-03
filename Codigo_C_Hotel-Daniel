@@ -1,0 +1,36 @@
+#define CLIENTES_FILE "clientes.dat"
+#define FUNC_FILE "funcionarios.dat"
+#define QUARTOS_FILE "quartos.dat"
+#define ESTADIAS_FILE "estadias.dat"
+
+typedef struct {
+    int codigo;
+    char nome[100];
+    char endereco[150];
+    char telefone[20];
+} Cliente;
+
+typedef struct {
+    int codigo;
+    char nome[100];
+    char telefone[20];
+    char cargo[30];
+    double salario;
+} Funcionario;
+
+typedef struct {
+    int numero;
+    int qtd_hospedes;
+    double valor_diaria;
+    char status[10]; // "ocupado" ou "desocupado"
+} Quarto;
+
+typedef struct {
+    int codigo;
+    int cliente_codigo;
+    int quarto_numero;
+    int data_entrada; // YYYYMMDD
+    int data_saida;   // YYYYMMDD
+    int qtd_diarias;
+    int ativo; // 1 = em andamento, 0 = finalizada
+} Estadia;
