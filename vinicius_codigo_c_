@@ -1,0 +1,71 @@
+void cadastrar_funcionario() {
+    Funcionario ffunc;
+    printf("Digite codigo (0 para gerar automatico): ");
+    if(scanf("%d", &ffunc.codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+
+    // GERADOR AUTOMÁTICO DE CÓDIGO ↓
+    if(ffunc.codigo == 0) {
+        FILE f = fopen(FUNC_FILE, "rb");
+        int max = 0;
+        if(f) {
+            Funcionario tmp;
+            while(fread(&tmp, sizeof(tmp), 1, f)) if(tmp.codigo > max) max = tmp.codigo;
+            fclose(f);
+        }
+        ffunc.codigo = max + 1;
+    } else {
+        // ↓ VALIDAÇÃO DE CÓDIGO (verifica se já existe)
+        if(existe_funcionario(ffunc.codigo, NULL)) {
+            printf("Codigo ja existe. Operacao cancelada.\n");
+            return;
+        }
+    }
+
+    // ENTRADA DOS DADOS DO FUNCIONÁRIO ↓
+    printf("Nome: ");
+    fgets(ffunc.nome, sizeof(ffunc.nome), stdin);
+    ffunc.nome[strcspn(ffunc.nome, "\n")] = 0;
+    printf("Telefone: ");
+    fgets(ffunc.telefone, sizeof(ffunc.telefone), stdin);
+    ffunc.telefone[strcspn(ffunc.telefone, "\n")] = 0;
+    printf("Cargo: ");
+    fgets(ffunc.cargo, sizeof(ffunc.cargo), stdin);
+    ffunc.cargo[strcspn(ffunc.cargo, "\n")] = 0;
+    printf("Salario: ");
+    if(scanf("%lf", &ffunc.salario) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+
+   
+    FILEf = fopen(FUNC_FILE, "ab");
+    if(!f) { perror("Erro ao abrir arquivo"); return; }
+    fwrite(&ffunc, sizeof(ffunc), 1, f);
+    fclose(f);
+    printf("Funcionario cadastrado com codigo %d\n", ffunc.codigo);
+}int existe_funcionario(int codigo, Funcionario out) {
+    FILEf = fopen(FUNC_FILE, "rb");
+    if(!f) return 0;
+    Funcionario x;
+    while(fread(&x, sizeof(Funcionario), 1, f)) {
+        if(x.codigo == codigo) {
+            if(out) *out = x;
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+} else {
+        // ↓ VALIDAÇÃO: Verifica se o código já existe
+        if(existe_funcionario(ffunc.codigo, NULL)) {
+            printf("Codigo ja existe. Operacao cancelada.\n");
+            return;
+        }
+    }
+
+
+
+
+
+          
