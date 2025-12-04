@@ -69,13 +69,13 @@ Clique Build & Run (F9)
 
 --Funcionalidades Implementadas--
  
-[X] Cadastro
+ Cadastro
 
-cadastrar_cliente()
+[ ]cadastrar_cliente()
 
-cadastrar_funcionario()
+[x]cadastrar_funcionario()
 
-cadastrar_quarto()
+[ ]cadastrar_quarto()
 
 [ ] Estadia
 
