@@ -1,0 +1,20 @@
+Validação de entrada:
+
+c
+if(scanf("%d", &ffunc.codigo) != 1) { 
+    while(getchar()!='\n'); 
+    printf("Entrada invalida.\n"); 
+    return; 
+}
+Verificação de código duplicado:
+
+c
+if(existe_funcionario(ffunc.codigo, NULL)) {
+    printf("Codigo ja existe. Operacao cancelada.\n");
+    return;
+}
+Busca por funcionário (que serve como "teste" de que o cadastro funcionou):
+
+c
+void pesquisar_funcionario_por_codigo() { ... }
+void pesquisar_funcionario_por_nome() { ... }
