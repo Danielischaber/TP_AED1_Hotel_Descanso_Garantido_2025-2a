@@ -69,7 +69,7 @@ Clique Build & Run (F9)
 
 --Funcionalidades Implementadas--
  
-[ ] Cadastro
+[X] Cadastro
 
 cadastrar_cliente()
 
@@ -105,7 +105,7 @@ Calcular pontos de fidelidade
 
 -[x]Cadastro de cliente-
 
--[ ]Cadastro de funcionário-
+-[X]Cadastro de funcionário-
 
 -[ ]Cadastro de quarto-
 
@@ -147,9 +147,9 @@ Sprints do Projeto (Daniel, Vinicius e Marco)
 
  Vinicius
 
--[ ]Cadastro de funcionário
+-[X]Cadastro de funcionário
 
--[ ]Validação de código
+-[X]Validação de código
 
 -[ ]Teste do módulo
 
