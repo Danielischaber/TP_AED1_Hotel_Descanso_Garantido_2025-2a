@@ -43,7 +43,7 @@ estadias.dat
 
 Este projeto esta sendo projetado e testado no Code::Blocks 20.03 (Windows / MinGW-GCC).
 
-[ ] O Code::Blocks cuida automaticamente de:
+O Code::Blocks cuida automaticamente de:
 
 Criação do executável (.exe)
 
@@ -53,7 +53,7 @@ Inclusão das bibliotecas padrão
 
 Execução do programa pelo botão Build & Run (F9)
 
-[ ] Como rodar o projeto no Code::Blocks:
+Como rodar o projeto no Code::Blocks:
 
 Abra o Code::Blocks
 
@@ -103,7 +103,7 @@ Calcular pontos de fidelidade
 
 --Backlog do Produto--
 
--[ ]Cadastro de cliente-
+-[x]Cadastro de cliente-
 
 -[ ]Cadastro de funcionário-
 
@@ -115,13 +115,13 @@ Calcular pontos de fidelidade
 
 -[ ]Baixa de estadia-
 
--[ ]Pesquisas por nome e código-
+-[x]Pesquisas por nome e código-
 
 -[ ]Fidelidade-
 
 -[ ]Relatórios-
 
--[ ]Persistência em arquivos binários-
+-[x]Persistência em arquivos binários-
 
 -[ ]Menu principal-
 
@@ -133,17 +133,17 @@ Sprints do Projeto (Daniel, Vinicius e Marco)
 
  Daniel
 
--[ ]Estruturas (struct)
+-[x]Estruturas (struct)
 
--[ ]Arquivos .dat
+-[x]Arquivos .dat
 
--[ ]Cadastro de clientes
+-[x]Cadastro de clientes
 
--[ ]Código automático
+-[x]Código automático
 
--[ ]Caso de teste de cliente
+-[x]Caso de teste de cliente
 
--[ ]Função case_insensitive_search()
+-[x]Função case_insensitive_search()
 
  Vinicius
 
