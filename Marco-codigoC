@@ -1,0 +1,67 @@
+void cadastrar_quarto() {
+    Quarto q;
+    printf("Numero do quarto: ");
+    if(scanf("%d", &q.numero) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+
+    // ↓ VALIDAÇÃO DE NÚMERO (verifica se já existe)
+    if(existe_quarto(q.numero, NULL)) {
+        printf("Quarto ja cadastrado.\n");
+        return;
+    }
+
+    printf("Quantidade de hospedes: ");
+    if(scanf("%d", &q.qtd_hospedes) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    printf("Valor da diaria: ");
+    if(scanf("%lf", &q.valor_diaria) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+
+    // ↓ STATUS INICIAL (sempre "desocupado" ao cadastrar)
+    strcpy(q.status, "desocupado");
+
+    FILE *f = fopen(QUARTOS_FILE, "ab");
+    if(!f) { perror("Erro ao abrir arquivo"); return; }
+    fwrite(&q, sizeof(q), 1, f);
+    fclose(f);
+    printf("Quarto %d cadastrado.\n", q.numero);
+}
+int existe_quarto(int numero, Quarto out) {
+    FILEf = fopen(QUARTOS_FILE, "rb");
+    if(!f) return 0;
+    Quarto q;
+    while(fread(&q, sizeof(Quarto), 1, f)) {
+        if(q.numero == numero) {
+            if(out) *out = q;
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+if(existe_quarto(q.numero, NULL)) {
+    printf("Quarto ja cadastrado.\n");
+    return;
+}
+strcpy(q.status, "desocupado");
+char status[10]; //
+// Em cadastrar_estadia() - testa se encontra quarto disponível
+int encontrar_quarto_disponivel(int qtd_hospedes, int entrada, int saida, Quarto *out) {
+    // ... procura quartos com status "desocupado" ...
+}
+
+// Em dar_baixa_estadia() - testa se quarto existe
+if(!existe_quarto(e.quarto_numero, &q)) {
+    printf("Erro: quarto nao encontrado.\n");
+    return;
+}
+// Testa entrada numérica
+if(scanf("%d", &q.numero) != 1) { ... }
+
+// Testa duplicata
+if(existe_quarto(q.numero, NULL)) { ... }
+
+// Testa tipos de entrada
+if(scanf("%d", &q.qtd_hospedes) != 1) { ... }
+if(scanf("%lf", &q.valor_diaria) != 1) { ... }
