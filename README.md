@@ -75,7 +75,7 @@ Clique Build & Run (F9)
 
 [x]cadastrar_funcionario()
 
-[ ]cadastrar_quarto()
+[x]cadastrar_quarto()
 
 [ ] Estadia
 
@@ -107,7 +107,7 @@ Calcular pontos de fidelidade
 
 -[X]Cadastro de funcionário-
 
--[ ]Cadastro de quarto-
+-[x]Cadastro de quarto-
 
 -[ ]Cadastro de estadia-
 
@@ -125,7 +125,7 @@ Calcular pontos de fidelidade
 
 -[ ]Menu principal-
 
-Sprints do Projeto (Daniel, Vinicius e Marco)
+Sprints do Projeto (Daniel, Vinicius e )
 
  Sprint 1 – Base e Cadastros
 
@@ -155,13 +155,13 @@ Sprints do Projeto (Daniel, Vinicius e Marco)
 
  Marco
 
--[ ]Cadastro de quarto
+-[x]Cadastro de quarto
 
--[ ]Validação de número
+-[x]Validação de número
 
--[ ]Status inicial
+-[x]Status inicial
 
--[ ]Teste do módulo
+-[x]Teste do módulo
 
 Sprint 2 – Lógica Avançada
 
@@ -191,13 +191,13 @@ Sprint 2 – Lógica Avançada
 
  Marco
 
--[ ]Pesquisas (cliente/funcionários-
+-[]Pesquisas (cliente/funcionários-
 
--[ ]Relatórios
+-[]Relatórios
 
--[ ]Fidelidades
+-[]Fidelidades
 
--[ ]Testes
+-[]Testes
 
 --Como Executar no Code::Blocks--
 
