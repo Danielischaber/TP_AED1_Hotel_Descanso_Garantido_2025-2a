@@ -151,7 +151,7 @@ Sprints do Projeto (Daniel, Vinicius e Marco)
 
 -[X]Validação de código
 
--[ ]Teste do módulo
+-[X]Teste do módulo
 
  Marco
 
