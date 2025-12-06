@@ -65,7 +65,46 @@ void cadastrar_funcionario() {
     }
 
 
+.......................
+BAIXAR estadidia
 
+void dar_baixa_estadia() {
+    int codigo;
+    printf("Digite codigo da estadia para dar baixa: ");
+    ...
+    while(fread(&e, sizeof(e), 1, f)) {
+        if(e.codigo == codigo && e.ativo) {
+            ...
+            e.ativo = 0;
+            fseek(f, -sizeof(e), SEEK_CUR);
+            fwrite(&e, sizeof(e), 1, f);
+            fclose(f);
+            atualizar_status_quarto(e.quarto_numero, "desocupado");
+            printf("Baixa realizada e quarto %d desocupado.\n", e.quarto_numero);
+            return;
+        }
+    }
+}
+...........................
+valor total 
+double total = e.qtd_diarias * q.valor_diaria;
+printf("Valor total a pagar: R$ %.2f ( %d diarias x R$ %.2f )\n",
+        total, e.qtd_diarias, q.valor_diaria);
+,..............
+statuzts de quarto
+void atualizar_status_quarto(int numero, const char *status) {
+    FILE *f = fopen(QUARTOS_FILE, "r+b");
+    ...
+    while(fread(&q, sizeof(q), 1, f)) {
+        if(q.numero == numero) {
+            strncpy(q.status, status, sizeof(q.status)-1);
+            ...
+            fseek(f, -sizeof(q), SEEK_CUR);
+            fwrite(&q, sizeof(q), 1, f);
+            break;
+        }
+    }
+}
 
 
           
