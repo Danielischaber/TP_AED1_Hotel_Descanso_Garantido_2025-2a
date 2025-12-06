@@ -71,13 +71,13 @@ Clique Build & Run (F9)
  
  Cadastro
 
-[ ]cadastrar_cliente()
+[x]cadastrar_cliente()
 
 [x]cadastrar_funcionario()
 
 [x]cadastrar_quarto()
 
-[ ] Estadia
+[x] Estadia
 
 Busca automática de quarto compatível
 
@@ -109,9 +109,9 @@ Calcular pontos de fidelidade
 
 -[x]Cadastro de quarto-
 
--[ ]Cadastro de estadia-
+-[x]Cadastro de estadia-
 
--[ ]Cálculo de diárias-
+-[x]Cálculo de diárias-
 
 -[ ]Baixa de estadia-
 
@@ -125,7 +125,7 @@ Calcular pontos de fidelidade
 
 -[ ]Menu principal-
 
-Sprints do Projeto (Daniel, Vinicius e )
+Sprints do Projeto (Daniel, Vinicius e Marco)
 
  Sprint 1 – Base e Cadastros
 
@@ -165,17 +165,19 @@ Sprints do Projeto (Daniel, Vinicius e )
 
 Sprint 2 – Lógica Avançada
 
+![WhatsApp Image 2025-12-05 at 19 56 23](https://github.com/user-attachments/assets/d217c5ff-43bc-499c-95d9-7822d85d023d)
+
  Daniel
 
--[ ]Cadastro de estadia
+-[x]Cadastro de estadia
 
--[ ]Verificação de disponibilidade
+-[x]Verificação de disponibilidade
 
--[ ]diff_days()
+-[x]diff_days()
 
--[ ]encontrar_quarto_disponivel()
+-[x]encontrar_quarto_disponivel()
 
--[ ]Atualização de status
+-[x]Atualização de status
 
 -[ ]Teste da função
 
