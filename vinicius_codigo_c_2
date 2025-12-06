@@ -18,3 +18,82 @@ Busca por funcionário (que serve como "teste" de que o cadastro funcionou):
 c
 void pesquisar_funcionario_por_codigo() { ... }
 void pesquisar_funcionario_por_nome() { ... }
+.........
+novo testes 
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Importa os .h do projeto se existirem
+// #include "suasFuncoes.h"
+
+// Como você não usa .h, só declara os protótipos:
+void atualizar_status_quarto(int numero, const char *status);
+void dar_baixa_estadia();
+
+// Estruturas iguais ao seu código
+typedef struct {
+    int numero;
+    int qtd_hospedes;
+    double valor_diaria;
+    char status[10];
+} Quarto;
+
+typedef struct {
+    int codigo;
+    int cliente_codigo;
+    int quarto_numero;
+    int data_entrada;
+    int data_saida;
+    int qtd_diarias;
+    int ativo;
+} Estadia;
+
+// ---------------
+// FUNÇÃO DE TESTE
+// ---------------
+
+void teste_baixa_estadia() {
+    printf("\n======== TESTE: BAIXA DE ESTADIA ========\n");
+
+    // Simula arquivo quartos.dat
+    FILE *fq = fopen("quartos.dat", "wb");
+    Quarto q = {101, 2, 150.0, "ocupado"};
+    fwrite(&q, sizeof(q), 1, fq);
+    fclose(fq);
+
+    // Simula arquivo estadias.dat
+    FILE *fe = fopen("estadias.dat", "wb");
+    Estadia e = {1, 123, 101, 20250101, 20250105, 4, 1};
+    fwrite(&e, sizeof(e), 1, fe);
+    fclose(fe);
+
+    printf("Arquivo criado com 1 estadia ativa.\n");
+    printf("Valor esperado = 4 dias * R$150 = R$600,00\n");
+    printf("Rodando função dar_baixa_estadia()...\n\n");
+
+    // Executa sua função real
+    dar_baixa_estadia();
+
+    // Reabre arquivo para verificar resultado
+    fe = fopen("estadias.dat", "rb");
+    fread(&e, sizeof(e), 1, fe);
+    fclose(fe);
+
+    printf("\n--- RESULTADOS DO TESTE ---\n");
+    printf("Estadia ativa? %d (esperado: 0)\n", e.ativo);
+
+    fq = fopen("quartos.dat", "rb");
+    fread(&q, sizeof(q), 1, fq);
+    fclose(fq);
+
+    printf("Status do quarto: %s (esperado: desocupado)\n", q.status);
+
+    printf("==========================================\n\n");
+}
+
+int main() {
+    teste_baixa_estadia();
+    return 0;
+}
