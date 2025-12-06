@@ -183,13 +183,13 @@ Sprint 2 – Lógica Avançada
 
  Vinicius
 
--[ ]Baixa de estadia
+-[x]Baixa de estadia
 
--[ ]Cálculo de valor total
+-[x]Cálculo de valor total
 
--[ ]Atualização de status
+-[x]Atualização de status
 
--[ ]Testes
+-[x]Testes
 
  Marco
 
