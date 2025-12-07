@@ -193,13 +193,13 @@ Sprint 2 – Lógica Avançada
 
  Marco
 
--[]Pesquisas (cliente/funcionários-
+-[x]Pesquisas (cliente/funcionários-
 
--[]Relatórios
+-[x]Relatórios
 
--[]Fidelidades
+-[x]Fidelidades
 
--[]Testes
+-[x]Testes
 
 --Como Executar no Code::Blocks--
 
