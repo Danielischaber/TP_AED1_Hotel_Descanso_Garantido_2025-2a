@@ -235,6 +235,24 @@ Sprint 2 – Lógica Avançada
 
  Verifique se retorna os dados corretos
 
+ [x]--Testes Automatizados--
+
+Teste 1: Busca Case-Insensitive
+
+Teste 2: Calculo de Datas
+
+Teste 3: Cadastro de Cliente
+
+Teste 4: Cadastro de Quarto
+
+Teste 5: Sobreposicao de Periodos
+
+Teste 6: Sobreposicao de Periodos
+
+Teste 7: Calculo de Pontos de Fidelidade
+
+Teste 8: Status do Quarto
+
 --Observações:--
 
 Os arquivos .dat serão criados automaticamente na pasta do executável
