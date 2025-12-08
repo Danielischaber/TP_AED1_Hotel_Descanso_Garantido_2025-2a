@@ -87,13 +87,13 @@ Cálculo automático de diárias (diff_days())
 
 Atualização de status do quarto
 
-[ ] Baixa de Estadia
+[x] Baixa de Estadia
 
 Cálculo automático do valor total
 
 Atualiza status para “desocupado”
 
-[ ] Pesquisas e Relatórios
+[x] Pesquisas e Relatórios
 
 Busca por nome/código (cliente/funcionário)
 
@@ -113,17 +113,17 @@ Calcular pontos de fidelidade
 
 -[x]Cálculo de diárias-
 
--[ ]Baixa de estadia-
+-[x]Baixa de estadia-
 
 -[x]Pesquisas por nome e código-
 
--[ ]Fidelidade-
+-[x]Fidelidade-
 
--[ ]Relatórios-
+-[x]Relatórios-
 
 -[x]Persistência em arquivos binários-
 
--[ ]Menu principal-
+-[x]Menu principal-
 
 Sprints do Projeto (Daniel, Vinicius e Marco)
 
@@ -179,7 +179,7 @@ Sprint 2 – Lógica Avançada
 
 -[x]Atualização de status
 
--[ ]Teste da função
+-[x]Teste da função
 
  Vinicius
 
@@ -203,8 +203,6 @@ Sprint 2 – Lógica Avançada
 
 --Como Executar no Code::Blocks--
 
---Casos de testes--
-
 -Método recomendado:-
 
 -Abrir o projeto .cbp (ou criar um novo)
@@ -214,6 +212,30 @@ Sprint 2 – Lógica Avançada
 -Adicionar o código completo
 
 -Pressionar F9 para compilar e executar
+
+--Casos de testes--
+
+- Teste de Cadastros Básicos:
+  
+ 1. Execute e verifique se os arquivos .dat são criados
+    
+ 2. Teste cadastro de 3 clientes, 2 funcionários, 5 quartos
+    
+- Teste de Estadia:
+- 
+ 1. Cadastre um cliente
+    
+ 2. Cadastre um quarto disponível
+   
+ 3. Crie uma estadia
+ 
+ 4. Verifique se o status do quarto mudou para "ocupado"
+    
+- Teste de Pesquisa
+  
+ Pesquise um cliente pelo nome (case insensitive)
+
+ Verifique se retorna os dados corretos
 
 --Observações:--
 
