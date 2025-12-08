@@ -1,0 +1,558 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <time.h>
+
+#define CLIENTES_FILE "clientes.dat"
+#define FUNC_FILE "funcionarios.dat"
+#define QUARTOS_FILE "quartos.dat"
+#define ESTADIAS_FILE "estadias.dat"
+
+typedef struct {
+    int codigo;
+    char nome[100];
+    char endereco[150];
+    char telefone[20];
+} Cliente;
+
+typedef struct {
+    int codigo;
+    char nome[100];
+    char telefone[20];
+    char cargo[30];
+    double salario;
+} Funcionario;
+
+typedef struct {
+    int numero;
+    int qtd_hospedes;
+    double valor_diaria;
+    char status[10];
+} Quarto;
+
+typedef struct {
+    int codigo;
+    int cliente_codigo;
+    int quarto_numero;
+    int data_entrada;
+    int data_saida;
+    int qtd_diarias;
+    int ativo;
+} Estadia;
+
+void clear_screen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+char *case_insensitive_search(const char *haystack, const char *needle) {
+    if (!*needle) return (char *)haystack;
+    size_t needle_len = strlen(needle);
+    for (; *haystack; haystack++) {
+        size_t i;
+        for (i = 0; i < needle_len; ++i) {
+            if (!haystack[i]) break;
+            if (tolower((unsigned char)haystack[i]) != tolower((unsigned char)needle[i])) break;
+        }
+        if (i == needle_len) return (char *)haystack;
+    }
+    return NULL;
+}
+
+int ymd_to_time_days(int yyyymmdd) {
+    int y = yyyymmdd / 10000;
+    int m = (yyyymmdd / 100) % 100;
+    int d = yyyymmdd % 100;
+    struct tm t = {0};
+    t.tm_year = y - 1900;
+    t.tm_mon = m - 1;
+    t.tm_mday = d;
+    t.tm_hour = 12;
+    time_t tt = mktime(&t);
+    if (tt == (time_t)-1) return 0;
+    return (int)(tt / 86400);
+}
+
+int diff_days(int d1, int d2) {
+    int days1 = ymd_to_time_days(d1);
+    int days2 = ymd_to_time_days(d2);
+    return days2 - days1;
+}
+
+int existe_cliente(int codigo, Cliente *out) {
+    FILE *f = fopen(CLIENTES_FILE, "rb");
+    if(!f) return 0;
+    Cliente c;
+    while(fread(&c, sizeof(Cliente), 1, f)) {
+        if(c.codigo == codigo) {
+            if(out) *out = c;
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+int existe_funcionario(int codigo, Funcionario *out) {
+    FILE *f = fopen(FUNC_FILE, "rb");
+    if(!f) return 0;
+    Funcionario x;
+    while(fread(&x, sizeof(Funcionario), 1, f)) {
+        if(x.codigo == codigo) {
+            if(out) *out = x;
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+int existe_quarto(int numero, Quarto *out) {
+    FILE *f = fopen(QUARTOS_FILE, "rb");
+    if(!f) return 0;
+    Quarto q;
+    while(fread(&q, sizeof(Quarto), 1, f)) {
+        if(q.numero == numero) {
+            if(out) *out = q;
+            fclose(f);
+            return 1;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+void cadastrar_cliente() {
+    Cliente c;
+    printf("Digite codigo (0 para gerar automatico): ");
+    if(scanf("%d", &c.codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    if(c.codigo == 0) {
+        FILE *f = fopen(CLIENTES_FILE, "rb");
+        int max = 0;
+        if(f) {
+            Cliente tmp;
+            while(fread(&tmp, sizeof(tmp), 1, f)) if(tmp.codigo > max) max = tmp.codigo;
+            fclose(f);
+        }
+        c.codigo = max + 1;
+    } else {
+        if(existe_cliente(c.codigo, NULL)) {
+            printf("Codigo ja existe. Operacao cancelada.\n");
+            return;
+        }
+    }
+    printf("Nome: ");
+    fgets(c.nome, sizeof(c.nome), stdin);
+    c.nome[strcspn(c.nome, "\n")] = 0;
+    printf("Endereco: ");
+    fgets(c.endereco, sizeof(c.endereco), stdin);
+    c.endereco[strcspn(c.endereco, "\n")] = 0;
+    printf("Telefone: ");
+    fgets(c.telefone, sizeof(c.telefone), stdin);
+    c.telefone[strcspn(c.telefone, "\n")] = 0;
+
+    FILE *f = fopen(CLIENTES_FILE, "ab");
+    if(!f) { perror("Erro ao abrir arquivo"); return; }
+    fwrite(&c, sizeof(c), 1, f);
+    fclose(f);
+    printf("Cliente cadastrado com codigo %d\n", c.codigo);
+}
+
+void cadastrar_funcionario() {
+    Funcionario ffunc;
+    printf("Digite codigo (0 para gerar automatico): ");
+    if(scanf("%d", &ffunc.codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    if(ffunc.codigo == 0) {
+        FILE *f = fopen(FUNC_FILE, "rb");
+        int max = 0;
+        if(f) {
+            Funcionario tmp;
+            while(fread(&tmp, sizeof(tmp), 1, f)) if(tmp.codigo > max) max = tmp.codigo;
+            fclose(f);
+        }
+        ffunc.codigo = max + 1;
+    } else {
+        if(existe_funcionario(ffunc.codigo, NULL)) {
+            printf("Codigo ja existe. Operacao cancelada.\n");
+            return;
+        }
+    }
+    printf("Nome: ");
+    fgets(ffunc.nome, sizeof(ffunc.nome), stdin);
+    ffunc.nome[strcspn(ffunc.nome, "\n")] = 0;
+    printf("Telefone: ");
+    fgets(ffunc.telefone, sizeof(ffunc.telefone), stdin);
+    ffunc.telefone[strcspn(ffunc.telefone, "\n")] = 0;
+    printf("Cargo: ");
+    fgets(ffunc.cargo, sizeof(ffunc.cargo), stdin);
+    ffunc.cargo[strcspn(ffunc.cargo, "\n")] = 0;
+    printf("Salario: ");
+    if(scanf("%lf", &ffunc.salario) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+
+    FILE *f = fopen(FUNC_FILE, "ab");
+    if(!f) { perror("Erro ao abrir arquivo"); return; }
+    fwrite(&ffunc, sizeof(ffunc), 1, f);
+    fclose(f);
+    printf("Funcionario cadastrado com codigo %d\n", ffunc.codigo);
+}
+
+void cadastrar_quarto() {
+    Quarto q;
+    printf("Numero do quarto: ");
+    if(scanf("%d", &q.numero) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    if(existe_quarto(q.numero, NULL)) {
+        printf("Quarto ja cadastrado.\n");
+        return;
+    }
+    printf("Quantidade de hospedes: ");
+    if(scanf("%d", &q.qtd_hospedes) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    printf("Valor da diaria: ");
+    if(scanf("%lf", &q.valor_diaria) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    strcpy(q.status, "desocupado");
+
+    FILE *f = fopen(QUARTOS_FILE, "ab");
+    if(!f) { perror("Erro ao abrir arquivo"); return; }
+    fwrite(&q, sizeof(q), 1, f);
+    fclose(f);
+    printf("Quarto %d cadastrado.\n", q.numero);
+}
+
+int periodo_sobrepoe(int e1_in, int e1_out, int e2_in, int e2_out) {
+    return (e1_in < e2_out) && (e2_in < e1_out);
+}
+
+int quarto_disponivel_para_periodo(int numero, int entrada, int saida) {
+    FILE *f = fopen(ESTADIAS_FILE, "rb");
+    if(!f) return 1;
+    Estadia e;
+    while(fread(&e, sizeof(e), 1, f)) {
+        if(e.quarto_numero == numero && e.ativo) {
+            if(periodo_sobrepoe(e.data_entrada, e.data_saida, entrada, saida)) {
+                fclose(f);
+                return 0;
+            }
+        }
+    }
+    fclose(f);
+    return 1;
+}
+
+int encontrar_quarto_disponivel(int qtd_hospedes, int entrada, int saida, Quarto *out) {
+    FILE *f = fopen(QUARTOS_FILE, "rb");
+    if(!f) return 0;
+    Quarto q;
+    while(fread(&q, sizeof(q), 1, f)) {
+        if(strcmp(q.status, "desocupado") == 0 && q.qtd_hospedes >= qtd_hospedes) {
+            if(quarto_disponivel_para_periodo(q.numero, entrada, saida)) {
+                if(out) *out = q;
+                fclose(f);
+                return 1;
+            }
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+void atualizar_status_quarto(int numero, const char *status) {
+    FILE *f = fopen(QUARTOS_FILE, "r+b");
+    if(!f) return;
+    Quarto q;
+    while(fread(&q, sizeof(q), 1, f)) {
+        if(q.numero == numero) {
+            strncpy(q.status, status, sizeof(q.status)-1);
+            q.status[sizeof(q.status)-1] = '\0';
+            fseek(f, -sizeof(q), SEEK_CUR);
+            fwrite(&q, sizeof(q), 1, f);
+            break;
+        }
+    }
+    fclose(f);
+}
+
+void cadastrar_estadia() {
+    Estadia e;
+    printf("Digite codigo do cliente: ");
+    if(scanf("%d", &e.cliente_codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    Cliente ctmp;
+    if(!existe_cliente(e.cliente_codigo, &ctmp)) {
+        printf("Cliente nao cadastrado.\n");
+        return;
+    }
+    int qtd_hospedes;
+    printf("Quantidade de hospedes: ");
+    if(scanf("%d", &qtd_hospedes) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    printf("Data de entrada (YYYYMMDD): ");
+    if(scanf("%d", &e.data_entrada) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    printf("Data de saida (YYYYMMDD): ");
+    if(scanf("%d", &e.data_saida) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    if(e.data_saida <= e.data_entrada) {
+        printf("Data de saida deve ser posterior a data de entrada.\n");
+        return;
+    }
+    Quarto qfound;
+    if(!encontrar_quarto_disponivel(qtd_hospedes, e.data_entrada, e.data_saida, &qfound)) {
+        printf("Nenhum quarto disponivel para o periodo e quantidade de hospedes.\n");
+        return;
+    }
+    FILE *f = fopen(ESTADIAS_FILE, "rb");
+    int max = 0;
+    if(f) {
+        Estadia tmp;
+        while(fread(&tmp, sizeof(tmp), 1, f)) if(tmp.codigo > max) max = tmp.codigo;
+        fclose(f);
+    }
+    e.codigo = max + 1;
+    e.quarto_numero = qfound.numero;
+    e.qtd_diarias = diff_days(e.data_entrada, e.data_saida);
+    if(e.qtd_diarias <= 0) {
+        printf("Erro no calculo de diarias.\n");
+        return;
+    }
+    e.ativo = 1;
+
+    FILE *fw = fopen(ESTADIAS_FILE, "ab");
+    if(!fw) { perror("Erro ao abrir estadias"); return; }
+    fwrite(&e, sizeof(e), 1, fw);
+    fclose(fw);
+
+    atualizar_status_quarto(e.quarto_numero, "ocupado");
+    printf("Estadia cadastrada codigo %d no quarto %d por %d diarias.\n", e.codigo, e.quarto_numero, e.qtd_diarias);
+}
+
+void dar_baixa_estadia() {
+    int codigo;
+    printf("Digite codigo da estadia para dar baixa: ");
+    if(scanf("%d", &codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    FILE *f = fopen(ESTADIAS_FILE, "r+b");
+    if(!f) { printf("Nenhuma estadia cadastrada.\n"); return; }
+    Estadia e;
+    int found = 0;
+    while(fread(&e, sizeof(e), 1, f)) {
+        if(e.codigo == codigo && e.ativo) {
+            found = 1;
+            Quarto q;
+            if(!existe_quarto(e.quarto_numero, &q)) {
+                printf("Erro: quarto nao encontrado.\n");
+                fclose(f);
+                return;
+            }
+            double total = e.qtd_diarias * q.valor_diaria;
+            printf("Valor total a pagar: R$ %.2f ( %d diarias x R$ %.2f )\n", total, e.qtd_diarias, q.valor_diaria);
+            e.ativo = 0;
+            fseek(f, -sizeof(e), SEEK_CUR);
+            fwrite(&e, sizeof(e), 1, f);
+            fclose(f);
+            atualizar_status_quarto(e.quarto_numero, "desocupado");
+            printf("Baixa realizada e quarto %d desocupado.\n", e.quarto_numero);
+            return;
+        }
+    }
+    fclose(f);
+    if(!found) printf("Estadia nao encontrada ou ja finalizada.\n");
+}
+
+void pesquisar_cliente_por_codigo() {
+    int codigo;
+    printf("Codigo do cliente: ");
+    if(scanf("%d", &codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    Cliente c;
+    if(existe_cliente(codigo, &c)) {
+        printf("Codigo: %d\nNome: %s\nEndereco: %s\nTelefone: %s\n", c.codigo, c.nome, c.endereco, c.telefone);
+    } else printf("Cliente nao encontrado.\n");
+}
+
+void pesquisar_cliente_por_nome() {
+    char nome[100];
+    printf("Nome (ou parte): ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = 0;
+    FILE *f = fopen(CLIENTES_FILE, "rb");
+    if(!f) { printf("Nenhum cliente cadastrado.\n"); return; }
+    Cliente c;
+    int achou = 0;
+    while(fread(&c, sizeof(c), 1, f)) {
+        if(case_insensitive_search(c.nome, nome)) {
+            printf("Codigo: %d\nNome: %s\nEndereco: %s\nTelefone: %s\n---\n", c.codigo, c.nome, c.endereco, c.telefone);
+            achou = 1;
+        }
+    }
+    fclose(f);
+    if(!achou) printf("Nenhum cliente encontrado.\n");
+}
+
+void pesquisar_funcionario_por_codigo() {
+    int codigo;
+    printf("Codigo do funcionario: ");
+    if(scanf("%d", &codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    Funcionario ftmp;
+    if(existe_funcionario(codigo, &ftmp)) {
+        printf("Codigo: %d\nNome: %s\nTelefone: %s\nCargo: %s\nSalario: R$ %.2f\n", ftmp.codigo, ftmp.nome, ftmp.telefone, ftmp.cargo, ftmp.salario);
+    } else printf("Funcionario nao encontrado.\n");
+}
+
+void pesquisar_funcionario_por_nome() {
+    char nome[100];
+    printf("Nome (ou parte): ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = 0;
+    FILE *f = fopen(FUNC_FILE, "rb");
+    if(!f) { printf("Nenhum funcionario cadastrado.\n"); return; }
+    Funcionario x;
+    int achou = 0;
+    while(fread(&x, sizeof(x), 1, f)) {
+        if(case_insensitive_search(x.nome, nome)) {
+            printf("Codigo: %d\nNome: %s\nTelefone: %s\nCargo: %s\nSalario: R$ %.2f\n---\n", x.codigo, x.nome, x.telefone, x.cargo, x.salario);
+            achou = 1;
+        }
+    }
+    fclose(f);
+    if(!achou) printf("Nenhum funcionario encontrado.\n");
+}
+
+void listar_estadias_cliente() {
+    char opt;
+    printf("Pesquisar por (c)odigo ou (n)ome? ");
+    if(scanf(" %c", &opt) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    int codigo = 0;
+    char nome[100] = {0};
+    if(opt == 'c') {
+        printf("Digite codigo do cliente: ");
+        if(scanf("%d", &codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+        getchar();
+    } else {
+        printf("Digite nome (ou parte): ");
+        fgets(nome, sizeof(nome), stdin);
+        nome[strcspn(nome, "\n")] = 0;
+    }
+    FILE *f = fopen(ESTADIAS_FILE, "rb");
+    if(!f) { printf("Nenhuma estadia cadastrada.\n"); return; }
+    Estadia e;
+    int achou = 0;
+    while(fread(&e, sizeof(e), 1, f)) {
+        int match = 0;
+        if(opt == 'c' && e.cliente_codigo == codigo) match = 1;
+        if(opt != 'c') {
+            Cliente c;
+            if(existe_cliente(e.cliente_codigo, &c)) {
+                if(case_insensitive_search(c.nome, nome)) match = 1;
+            }
+        }
+        if(match) {
+            printf("Estadia codigo: %d | Cliente: %d | Quarto: %d | Entrada: %d | Saida: %d | Diarias: %d | Ativa: %d\n",
+                   e.codigo, e.cliente_codigo, e.quarto_numero, e.data_entrada, e.data_saida, e.qtd_diarias, e.ativo);
+            achou = 1;
+        }
+    }
+    fclose(f);
+    if(!achou) printf("Nenhuma estadia encontrada para o cliente.\n");
+}
+
+void calcular_pontos_fidelidade() {
+    char opt;
+    printf("Pesquisar por (c)odigo ou (n)ome? ");
+    if(scanf(" %c", &opt) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+    getchar();
+    int codigo = 0;
+    char nome[100] = {0};
+    if(opt == 'c') {
+        printf("Digite codigo do cliente: ");
+        if(scanf("%d", &codigo) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
+        getchar();
+    } else {
+        printf("Digite nome (ou parte): ");
+        fgets(nome, sizeof(nome), stdin);
+        nome[strcspn(nome, "\n")] = 0;
+    }
+    FILE *f = fopen(ESTADIAS_FILE, "rb");
+    if(!f) { printf("Nenhuma estadia cadastrada.\n"); return; }
+    Estadia e;
+    int total_diarias = 0;
+    while(fread(&e, sizeof(e), 1, f)) {
+        int match = 0;
+        if(opt == 'c' && e.cliente_codigo == codigo) match = 1;
+        if(opt != 'c') {
+            Cliente c;
+            if(existe_cliente(e.cliente_codigo, &c)) {
+                if(case_insensitive_search(c.nome, nome)) match = 1;
+            }
+        }
+        if(match) total_diarias += e.qtd_diarias;
+    }
+    fclose(f);
+    int pontos = total_diarias * 10;
+    printf("Total de diarias: %d | Pontos de fidelidade: %d\n", total_diarias, pontos);
+}
+
+void menu() {
+    int opc = 0;
+    while(1) {
+        clear_screen();
+        printf("\n--- Hotel Descanso Garantido ---\n");
+        printf("1. Cadastrar cliente\n");
+        printf("2. Cadastrar funcionario\n");
+        printf("3. Cadastrar quarto\n");
+        printf("4. Cadastrar estadia\n");
+        printf("5. Dar baixa em estadia\n");
+        printf("6. Pesquisar cliente por codigo\n");
+        printf("7. Pesquisar cliente por nome\n");
+        printf("8. Pesquisar funcionario por codigo\n");
+        printf("9. Pesquisar funcionario por nome\n");
+        printf("10. Listar estadias de um cliente\n");
+        printf("11. Calcular pontos fidelidade\n");
+        printf("12. Sair\n\n");
+
+        printf("Escolha: ");
+        if(scanf("%d", &opc) != 1) {
+            while(getchar()!='\n');
+            printf("Entrada invalida. Pressione ENTER para continuar...");
+            getchar();
+            continue;
+        }
+        getchar();
+
+        switch(opc) {
+            case 1: cadastrar_cliente(); break;
+            case 2: cadastrar_funcionario(); break;
+            case 3: cadastrar_quarto(); break;
+            case 4: cadastrar_estadia(); break;
+            case 5: dar_baixa_estadia(); break;
+            case 6: pesquisar_cliente_por_codigo(); break;
+            case 7: pesquisar_cliente_por_nome(); break;
+            case 8: pesquisar_funcionario_por_codigo(); break;
+            case 9: pesquisar_funcionario_por_nome(); break;
+            case 10: listar_estadias_cliente(); break;
+            case 11: calcular_pontos_fidelidade(); break;
+            case 12: printf("Saindo...\n"); return;
+            default: printf("Opcao invalida.\n");
+        }
+
+        printf("\nOperacao concluida. Pressione ENTER para voltar ao menu...");
+        getchar();
+    }
+}
+
+int main() {
+    menu();
+    return 0;
+}
