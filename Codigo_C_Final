@@ -573,194 +573,190 @@ void restaurar_arquivo(const char* nome_real, const char* nome_teste) {
 }
 
 void test_case_insensitive_search() {
-    printf("\n=== Teste 1: Busca Case-Insensitive ===\n");
-    
+    printf("\nTeste 1: Busca Case-Insensitive\n");
+
     assert(case_insensitive_search("Joao Silva", "joao") != NULL);
     assert(case_insensitive_search("Joao Silva", "JOAO") != NULL);
     assert(case_insensitive_search("Joao Silva", "silva") != NULL);
     assert(case_insensitive_search("Joao Silva", "xyz") == NULL);
-    
+
     printf(" Teste de busca case-insensitive passou!\n");
 }
 
 void test_calculo_datas() {
-    printf("\n=== Teste 2: Calculo de Datas ===\n");
-    
+    printf("\nTeste 2: Calculo de Datas\n");
+
     assert(diff_days(20241201, 20241205) == 4);
     assert(diff_days(20241201, 20241201) == 0);
     assert(diff_days(20241201, 20241202) == 1);
-    
+
     printf(" Teste de calculo de datas passou!\n");
 }
 
 void test_cadastro_cliente() {
-    printf("\n=== Teste 3: Cadastro de Cliente ===\n");
-    
+    printf("\nTeste 3: Cadastro de Cliente\n");
+
     char backup_file[100];
     sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, CLIENTES_FILE);
     criar_arquivo_teste(CLIENTES_FILE, backup_file);
-    
+
     Cliente c = {999, "Cliente Teste", "Rua Teste 123", "11999999999"};
     int resultado = cadastrar_cliente_direto(&c);
     assert(resultado == 1);
-    
+
     Cliente buscado;
     int existe = existe_cliente(999, &buscado);
     assert(existe == 1);
     assert(strcmp(buscado.nome, "Cliente Teste") == 0);
-    
+
     Cliente c2 = {999, "Outro Nome", "Outro Endereco", "11888888888"};
     resultado = cadastrar_cliente_direto(&c2);
     assert(resultado == 0);
-    
+
     restaurar_arquivo(CLIENTES_FILE, backup_file);
-    
+
     printf(" Teste de cadastro de cliente passou!\n");
 }
 
 void test_cadastro_quarto() {
-    printf("\n=== Teste 4: Cadastro de Quarto ===\n");
-    
+    printf("\nTeste 4: Cadastro de Quarto\n");
+
     char backup_file[100];
     sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, QUARTOS_FILE);
     criar_arquivo_teste(QUARTOS_FILE, backup_file);
-    
+
     Quarto q = {999, 2, 150.0, "desocupado"};
     int resultado = cadastrar_quarto_direto(&q);
     assert(resultado == 1);
-    
+
     Quarto buscado;
     int existe = existe_quarto(999, &buscado);
     assert(existe == 1);
     assert(buscado.qtd_hospedes == 2);
     assert(buscado.valor_diaria == 150.0);
-    
+
     Quarto q2 = {999, 3, 200.0, "desocupado"};
     resultado = cadastrar_quarto_direto(&q2);
     assert(resultado == 0);
-    
+
     restaurar_arquivo(QUARTOS_FILE, backup_file);
-    
+
     printf(" Teste de cadastro de quarto passou!\n");
 }
 
 void test_sobreposicao_periodos() {
-    printf("\n=== Teste 5: Sobreposicao de Periodos ===\n");
-    
+    printf("\nTeste 5: Sobreposicao de Periodos\n");
+
     assert(periodo_sobrepoe(20241201, 20241205, 20241203, 20241207) == 1);
     assert(periodo_sobrepoe(20241201, 20241205, 20241206, 20241210) == 0);
     assert(periodo_sobrepoe(20241201, 20241205, 20241204, 20241205) == 1);
     assert(periodo_sobrepoe(20241201, 20241205, 20241128, 20241202) == 1);
-    
+
     printf(" Teste de sobreposicao de periodos passou!\n");
 }
 
 void test_cadastro_funcionario() {
-    printf("\n=== Teste 6: Cadastro de Funcionario ===\n");
-    
+    printf("\nTeste 6: Cadastro de Funcionario\n");
+
     char backup_file[100];
     sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, FUNC_FILE);
     criar_arquivo_teste(FUNC_FILE, backup_file);
-    
+
     Funcionario f = {888, "Funcionario Teste", "11988887777", "Recepcionista", 2500.0};
     int resultado = cadastrar_funcionario_direto(&f);
     assert(resultado == 1);
-    
+
     Funcionario buscado;
     int existe = existe_funcionario(888, &buscado);
     assert(existe == 1);
     assert(strcmp(buscado.cargo, "Recepcionista") == 0);
     assert(buscado.salario == 2500.0);
-    
+
     Funcionario f2 = {888, "Outro Func", "11977776666", "Gerente", 3000.0};
     resultado = cadastrar_funcionario_direto(&f2);
     assert(resultado == 0);
-    
+
     restaurar_arquivo(FUNC_FILE, backup_file);
-    
+
     printf(" Teste de cadastro de funcionario passou!\n");
 }
 
 void test_calculo_pontos() {
-    printf("\n=== Teste 7: Calculo de Pontos de Fidelidade ===\n");
-    
+    printf("\nTeste 7: Calculo de Pontos de Fidelidade\n");
+
     int diarias = 5;
     int pontos = diarias * 10;
     assert(pontos == 50);
-    
+
     diarias = 0;
     pontos = diarias * 10;
     assert(pontos == 0);
-    
+
     diarias = 15;
     pontos = diarias * 10;
     assert(pontos == 150);
-    
+
     printf(" Teste de calculo de pontos passou!\n");
 }
 
 void test_status_quarto() {
-    printf("\n=== Teste 8: Status do Quarto ===\n");
-    
+    printf("\nTeste 8: Status do Quarto\n");
+
     remove(QUARTOS_FILE);
-    
+
     Quarto q = {777, 2, 100.0, "desocupado"};
     int resultado = cadastrar_quarto_direto(&q);
     assert(resultado == 1);
-    
+
     Quarto buscado;
     int existe = existe_quarto(777, &buscado);
     assert(existe == 1);
-    
+
     if(existe) {
         printf(" Quarto encontrado: numero=%d, status='%s'\n", buscado.numero, buscado.status);
         assert(strcmp(buscado.status, "desocupado") == 0);
-        
+
         strcpy(buscado.status, "ocupado");
         assert(strcmp(buscado.status, "ocupado") == 0);
     }
-    
+
     remove(QUARTOS_FILE);
-    
+
     printf(" Teste de status do quarto passou!\n");
 }
 
 void executar_testes_automatizados() {
-    printf("\n");
-    printf("       EXECUTANDO TESTES AUTOMATIZADOS\n");
-    printf("\n");
-    
+    printf("\nEXECUTANDO TESTES AUTOMATIZADOS\n\n");
+
     int total_testes = 8;
     int testes_passaram = 0;
-    
+
     test_case_insensitive_search();
     testes_passaram++;
-    
+
     test_calculo_datas();
     testes_passaram++;
-    
+
     test_cadastro_cliente();
     testes_passaram++;
-    
+
     test_cadastro_quarto();
     testes_passaram++;
-    
+
     test_sobreposicao_periodos();
     testes_passaram++;
-    
+
     test_cadastro_funcionario();
     testes_passaram++;
-    
+
     test_calculo_pontos();
     testes_passaram++;
-    
+
     test_status_quarto();
     testes_passaram++;
-    
-    printf("\n");
-    printf("RESUMO: %d/%d testes passaram com sucesso!\n", testes_passaram, total_testes);
-    printf("\n");
-    
+
+    printf("\nRESUMO: %d/%d testes passaram com sucesso!\n", testes_passaram, total_testes);
+
     printf("\nPressione ENTER para voltar ao menu...");
     getchar();
 }
