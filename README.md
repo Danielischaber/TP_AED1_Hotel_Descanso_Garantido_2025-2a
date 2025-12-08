@@ -165,8 +165,6 @@ Sprints do Projeto (Daniel, Vinicius e Marco)
 
 Sprint 2 – Lógica Avançada
 
-![WhatsApp Image 2025-12-05 at 19 56 23](https://github.com/user-attachments/assets/d217c5ff-43bc-499c-95d9-7822d85d023d)
-
  Daniel
 
 -[x]Cadastro de estadia
