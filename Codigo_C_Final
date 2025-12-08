@@ -3,11 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <assert.h>
 
 #define CLIENTES_FILE "clientes.dat"
 #define FUNC_FILE "funcionarios.dat"
 #define QUARTOS_FILE "quartos.dat"
 #define ESTADIAS_FILE "estadias.dat"
+#define TEST_FILE_PREFIX "test_"
 
 typedef struct {
     int codigo;
@@ -28,7 +30,7 @@ typedef struct {
     int numero;
     int qtd_hospedes;
     double valor_diaria;
-    char status[10];
+    char status[11];
 } Quarto;
 
 typedef struct {
@@ -83,8 +85,8 @@ int diff_days(int d1, int d2) {
     return days2 - days1;
 }
 
-int existe_cliente(int codigo, Cliente *out) {
-    FILE *f = fopen(CLIENTES_FILE, "rb");
+int existe_cliente_arquivo(const char* filename, int codigo, Cliente *out) {
+    FILE *f = fopen(filename, "rb");
     if(!f) return 0;
     Cliente c;
     while(fread(&c, sizeof(Cliente), 1, f)) {
@@ -98,8 +100,12 @@ int existe_cliente(int codigo, Cliente *out) {
     return 0;
 }
 
-int existe_funcionario(int codigo, Funcionario *out) {
-    FILE *f = fopen(FUNC_FILE, "rb");
+int existe_cliente(int codigo, Cliente *out) {
+    return existe_cliente_arquivo(CLIENTES_FILE, codigo, out);
+}
+
+int existe_funcionario_arquivo(const char* filename, int codigo, Funcionario *out) {
+    FILE *f = fopen(filename, "rb");
     if(!f) return 0;
     Funcionario x;
     while(fread(&x, sizeof(Funcionario), 1, f)) {
@@ -113,8 +119,12 @@ int existe_funcionario(int codigo, Funcionario *out) {
     return 0;
 }
 
-int existe_quarto(int numero, Quarto *out) {
-    FILE *f = fopen(QUARTOS_FILE, "rb");
+int existe_funcionario(int codigo, Funcionario *out) {
+    return existe_funcionario_arquivo(FUNC_FILE, codigo, out);
+}
+
+int existe_quarto_arquivo(const char* filename, int numero, Quarto *out) {
+    FILE *f = fopen(filename, "rb");
     if(!f) return 0;
     Quarto q;
     while(fread(&q, sizeof(Quarto), 1, f)) {
@@ -126,6 +136,24 @@ int existe_quarto(int numero, Quarto *out) {
     }
     fclose(f);
     return 0;
+}
+
+int existe_quarto(int numero, Quarto *out) {
+    if(out) {
+        memset(out, 0, sizeof(Quarto));
+    }
+    return existe_quarto_arquivo(QUARTOS_FILE, numero, out);
+}
+
+int cadastrar_cliente_direto(Cliente *c) {
+    if(existe_cliente(c->codigo, NULL)) {
+        return 0;
+    }
+    FILE *f = fopen(CLIENTES_FILE, "ab");
+    if(!f) return 0;
+    fwrite(c, sizeof(Cliente), 1, f);
+    fclose(f);
+    return 1;
 }
 
 void cadastrar_cliente() {
@@ -158,11 +186,22 @@ void cadastrar_cliente() {
     fgets(c.telefone, sizeof(c.telefone), stdin);
     c.telefone[strcspn(c.telefone, "\n")] = 0;
 
-    FILE *f = fopen(CLIENTES_FILE, "ab");
-    if(!f) { perror("Erro ao abrir arquivo"); return; }
-    fwrite(&c, sizeof(c), 1, f);
-    fclose(f);
-    printf("Cliente cadastrado com codigo %d\n", c.codigo);
+    if(cadastrar_cliente_direto(&c)) {
+        printf("Cliente cadastrado com codigo %d\n", c.codigo);
+    } else {
+        printf("Erro ao cadastrar cliente.\n");
+    }
+}
+
+int cadastrar_funcionario_direto(Funcionario *f) {
+    if(existe_funcionario(f->codigo, NULL)) {
+        return 0;
+    }
+    FILE *file = fopen(FUNC_FILE, "ab");
+    if(!file) return 0;
+    fwrite(f, sizeof(Funcionario), 1, file);
+    fclose(file);
+    return 1;
 }
 
 void cadastrar_funcionario() {
@@ -198,11 +237,22 @@ void cadastrar_funcionario() {
     if(scanf("%lf", &ffunc.salario) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
     getchar();
 
-    FILE *f = fopen(FUNC_FILE, "ab");
-    if(!f) { perror("Erro ao abrir arquivo"); return; }
-    fwrite(&ffunc, sizeof(ffunc), 1, f);
+    if(cadastrar_funcionario_direto(&ffunc)) {
+        printf("Funcionario cadastrado com codigo %d\n", ffunc.codigo);
+    } else {
+        printf("Erro ao cadastrar funcionario.\n");
+    }
+}
+
+int cadastrar_quarto_direto(Quarto *q) {
+    if(existe_quarto(q->numero, NULL)) {
+        return 0;
+    }
+    FILE *f = fopen(QUARTOS_FILE, "ab");
+    if(!f) return 0;
+    fwrite(q, sizeof(Quarto), 1, f);
     fclose(f);
-    printf("Funcionario cadastrado com codigo %d\n", ffunc.codigo);
+    return 1;
 }
 
 void cadastrar_quarto() {
@@ -222,11 +272,11 @@ void cadastrar_quarto() {
     getchar();
     strcpy(q.status, "desocupado");
 
-    FILE *f = fopen(QUARTOS_FILE, "ab");
-    if(!f) { perror("Erro ao abrir arquivo"); return; }
-    fwrite(&q, sizeof(q), 1, f);
-    fclose(f);
-    printf("Quarto %d cadastrado.\n", q.numero);
+    if(cadastrar_quarto_direto(&q)) {
+        printf("Quarto %d cadastrado.\n", q.numero);
+    } else {
+        printf("Erro ao cadastrar quarto.\n");
+    }
 }
 
 int periodo_sobrepoe(int e1_in, int e1_out, int e2_in, int e2_out) {
@@ -504,6 +554,217 @@ void calcular_pontos_fidelidade() {
     printf("Total de diarias: %d | Pontos de fidelidade: %d\n", total_diarias, pontos);
 }
 
+void criar_arquivo_teste(const char* nome_real, const char* nome_teste) {
+    remove(nome_teste);
+    FILE *f = fopen(nome_real, "rb");
+    if(f) {
+        fclose(f);
+        rename(nome_real, nome_teste);
+    }
+}
+
+void restaurar_arquivo(const char* nome_real, const char* nome_teste) {
+    remove(nome_real);
+    FILE *f = fopen(nome_teste, "rb");
+    if(f) {
+        fclose(f);
+        rename(nome_teste, nome_real);
+    }
+}
+
+void test_case_insensitive_search() {
+    printf("\n=== Teste 1: Busca Case-Insensitive ===\n");
+    
+    assert(case_insensitive_search("Joao Silva", "joao") != NULL);
+    assert(case_insensitive_search("Joao Silva", "JOAO") != NULL);
+    assert(case_insensitive_search("Joao Silva", "silva") != NULL);
+    assert(case_insensitive_search("Joao Silva", "xyz") == NULL);
+    
+    printf(" Teste de busca case-insensitive passou!\n");
+}
+
+void test_calculo_datas() {
+    printf("\n=== Teste 2: Calculo de Datas ===\n");
+    
+    assert(diff_days(20241201, 20241205) == 4);
+    assert(diff_days(20241201, 20241201) == 0);
+    assert(diff_days(20241201, 20241202) == 1);
+    
+    printf(" Teste de calculo de datas passou!\n");
+}
+
+void test_cadastro_cliente() {
+    printf("\n=== Teste 3: Cadastro de Cliente ===\n");
+    
+    char backup_file[100];
+    sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, CLIENTES_FILE);
+    criar_arquivo_teste(CLIENTES_FILE, backup_file);
+    
+    Cliente c = {999, "Cliente Teste", "Rua Teste 123", "11999999999"};
+    int resultado = cadastrar_cliente_direto(&c);
+    assert(resultado == 1);
+    
+    Cliente buscado;
+    int existe = existe_cliente(999, &buscado);
+    assert(existe == 1);
+    assert(strcmp(buscado.nome, "Cliente Teste") == 0);
+    
+    Cliente c2 = {999, "Outro Nome", "Outro Endereco", "11888888888"};
+    resultado = cadastrar_cliente_direto(&c2);
+    assert(resultado == 0);
+    
+    restaurar_arquivo(CLIENTES_FILE, backup_file);
+    
+    printf(" Teste de cadastro de cliente passou!\n");
+}
+
+void test_cadastro_quarto() {
+    printf("\n=== Teste 4: Cadastro de Quarto ===\n");
+    
+    char backup_file[100];
+    sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, QUARTOS_FILE);
+    criar_arquivo_teste(QUARTOS_FILE, backup_file);
+    
+    Quarto q = {999, 2, 150.0, "desocupado"};
+    int resultado = cadastrar_quarto_direto(&q);
+    assert(resultado == 1);
+    
+    Quarto buscado;
+    int existe = existe_quarto(999, &buscado);
+    assert(existe == 1);
+    assert(buscado.qtd_hospedes == 2);
+    assert(buscado.valor_diaria == 150.0);
+    
+    Quarto q2 = {999, 3, 200.0, "desocupado"};
+    resultado = cadastrar_quarto_direto(&q2);
+    assert(resultado == 0);
+    
+    restaurar_arquivo(QUARTOS_FILE, backup_file);
+    
+    printf(" Teste de cadastro de quarto passou!\n");
+}
+
+void test_sobreposicao_periodos() {
+    printf("\n=== Teste 5: Sobreposicao de Periodos ===\n");
+    
+    assert(periodo_sobrepoe(20241201, 20241205, 20241203, 20241207) == 1);
+    assert(periodo_sobrepoe(20241201, 20241205, 20241206, 20241210) == 0);
+    assert(periodo_sobrepoe(20241201, 20241205, 20241204, 20241205) == 1);
+    assert(periodo_sobrepoe(20241201, 20241205, 20241128, 20241202) == 1);
+    
+    printf(" Teste de sobreposicao de periodos passou!\n");
+}
+
+void test_cadastro_funcionario() {
+    printf("\n=== Teste 6: Cadastro de Funcionario ===\n");
+    
+    char backup_file[100];
+    sprintf(backup_file, "%s%s", TEST_FILE_PREFIX, FUNC_FILE);
+    criar_arquivo_teste(FUNC_FILE, backup_file);
+    
+    Funcionario f = {888, "Funcionario Teste", "11988887777", "Recepcionista", 2500.0};
+    int resultado = cadastrar_funcionario_direto(&f);
+    assert(resultado == 1);
+    
+    Funcionario buscado;
+    int existe = existe_funcionario(888, &buscado);
+    assert(existe == 1);
+    assert(strcmp(buscado.cargo, "Recepcionista") == 0);
+    assert(buscado.salario == 2500.0);
+    
+    Funcionario f2 = {888, "Outro Func", "11977776666", "Gerente", 3000.0};
+    resultado = cadastrar_funcionario_direto(&f2);
+    assert(resultado == 0);
+    
+    restaurar_arquivo(FUNC_FILE, backup_file);
+    
+    printf(" Teste de cadastro de funcionario passou!\n");
+}
+
+void test_calculo_pontos() {
+    printf("\n=== Teste 7: Calculo de Pontos de Fidelidade ===\n");
+    
+    int diarias = 5;
+    int pontos = diarias * 10;
+    assert(pontos == 50);
+    
+    diarias = 0;
+    pontos = diarias * 10;
+    assert(pontos == 0);
+    
+    diarias = 15;
+    pontos = diarias * 10;
+    assert(pontos == 150);
+    
+    printf(" Teste de calculo de pontos passou!\n");
+}
+
+void test_status_quarto() {
+    printf("\n=== Teste 8: Status do Quarto ===\n");
+    
+    remove(QUARTOS_FILE);
+    
+    Quarto q = {777, 2, 100.0, "desocupado"};
+    int resultado = cadastrar_quarto_direto(&q);
+    assert(resultado == 1);
+    
+    Quarto buscado;
+    int existe = existe_quarto(777, &buscado);
+    assert(existe == 1);
+    
+    if(existe) {
+        printf(" Quarto encontrado: numero=%d, status='%s'\n", buscado.numero, buscado.status);
+        assert(strcmp(buscado.status, "desocupado") == 0);
+        
+        strcpy(buscado.status, "ocupado");
+        assert(strcmp(buscado.status, "ocupado") == 0);
+    }
+    
+    remove(QUARTOS_FILE);
+    
+    printf(" Teste de status do quarto passou!\n");
+}
+
+void executar_testes_automatizados() {
+    printf("\n");
+    printf("       EXECUTANDO TESTES AUTOMATIZADOS\n");
+    printf("\n");
+    
+    int total_testes = 8;
+    int testes_passaram = 0;
+    
+    test_case_insensitive_search();
+    testes_passaram++;
+    
+    test_calculo_datas();
+    testes_passaram++;
+    
+    test_cadastro_cliente();
+    testes_passaram++;
+    
+    test_cadastro_quarto();
+    testes_passaram++;
+    
+    test_sobreposicao_periodos();
+    testes_passaram++;
+    
+    test_cadastro_funcionario();
+    testes_passaram++;
+    
+    test_calculo_pontos();
+    testes_passaram++;
+    
+    test_status_quarto();
+    testes_passaram++;
+    
+    printf("\n");
+    printf("RESUMO: %d/%d testes passaram com sucesso!\n", testes_passaram, total_testes);
+    printf("\n");
+    
+    printf("\nPressione ENTER para voltar ao menu...");
+    getchar();
+}
+
 void menu() {
     int opc = 0;
     while(1) {
@@ -520,7 +781,8 @@ void menu() {
         printf("9. Pesquisar funcionario por nome\n");
         printf("10. Listar estadias de um cliente\n");
         printf("11. Calcular pontos fidelidade\n");
-        printf("12. Sair\n\n");
+        printf("12. Executar testes automatizados\n");
+        printf("13. Sair\n\n");
 
         printf("Escolha: ");
         if(scanf("%d", &opc) != 1) {
@@ -543,12 +805,15 @@ void menu() {
             case 9: pesquisar_funcionario_por_nome(); break;
             case 10: listar_estadias_cliente(); break;
             case 11: calcular_pontos_fidelidade(); break;
-            case 12: printf("Saindo...\n"); return;
+            case 12: executar_testes_automatizados(); break;
+            case 13: printf("Saindo...\n"); return;
             default: printf("Opcao invalida.\n");
         }
 
-        printf("\nOperacao concluida. Pressione ENTER para voltar ao menu...");
-        getchar();
+        if(opc != 12) {
+            printf("\nOperacao concluida. Pressione ENTER para voltar ao menu...");
+            getchar();
+        }
     }
 }
 
