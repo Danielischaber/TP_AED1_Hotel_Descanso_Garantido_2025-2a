@@ -65,12 +65,12 @@ char *case_insensitive_search(const char *haystack, const char *needle) {
     return NULL;
 }
 
-int ymd_to_time_days(int yyyymmdd) {
-    int y = yyyymmdd / 10000;
-    int m = (yyyymmdd / 100) % 100;
-    int d = yyyymmdd % 100;
+int ddmmaaaa_to_time_days(int ddmmaaaa) {
+    int d = ddmmaaaa / 1000000;
+    int m = (ddmmaaaa / 10000) % 100;
+    int a = ddmmaaaa % 10000;
     struct tm t = {0};
-    t.tm_year = y - 1900;
+    t.tm_year = a - 1900;
     t.tm_mon = m - 1;
     t.tm_mday = d;
     t.tm_hour = 12;
@@ -80,8 +80,8 @@ int ymd_to_time_days(int yyyymmdd) {
 }
 
 int diff_days(int d1, int d2) {
-    int days1 = ymd_to_time_days(d1);
-    int days2 = ymd_to_time_days(d2);
+    int days1 = ddmmaaaa_to_time_days(d1);
+    int days2 = ddmmaaaa_to_time_days(d2);
     return days2 - days1;
 }
 
@@ -280,7 +280,11 @@ void cadastrar_quarto() {
 }
 
 int periodo_sobrepoe(int e1_in, int e1_out, int e2_in, int e2_out) {
-    return (e1_in < e2_out) && (e2_in < e1_out);
+    int e1_in_days = ddmmaaaa_to_time_days(e1_in);
+    int e1_out_days = ddmmaaaa_to_time_days(e1_out);
+    int e2_in_days = ddmmaaaa_to_time_days(e2_in);
+    int e2_out_days = ddmmaaaa_to_time_days(e2_out);
+    return (e1_in_days < e2_out_days) && (e2_in_days < e1_out_days);
 }
 
 int quarto_disponivel_para_periodo(int numero, int entrada, int saida) {
@@ -346,13 +350,13 @@ void cadastrar_estadia() {
     printf("Quantidade de hospedes: ");
     if(scanf("%d", &qtd_hospedes) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
     getchar();
-    printf("Data de entrada (YYYYMMDD): ");
+    printf("Data de entrada (DDMMAAAA): ");
     if(scanf("%d", &e.data_entrada) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
     getchar();
-    printf("Data de saida (YYYYMMDD): ");
+    printf("Data de saida (DDMMAAAA): ");
     if(scanf("%d", &e.data_saida) != 1) { while(getchar()!='\n'); printf("Entrada invalida.\n"); return; }
     getchar();
-    if(e.data_saida <= e.data_entrada) {
+    if(ddmmaaaa_to_time_days(e.data_saida) <= ddmmaaaa_to_time_days(e.data_entrada)) {
         printf("Data de saida deve ser posterior a data de entrada.\n");
         return;
     }
@@ -509,7 +513,7 @@ void listar_estadias_cliente() {
             }
         }
         if(match) {
-            printf("Estadia codigo: %d | Cliente: %d | Quarto: %d | Entrada: %d | Saida: %d | Diarias: %d | Ativa: %d\n",
+            printf("Estadia codigo: %d | Cliente: %d | Quarto: %d | Entrada: %08d | Saida: %08d | Diarias: %d | Ativa: %d\n",
                    e.codigo, e.cliente_codigo, e.quarto_numero, e.data_entrada, e.data_saida, e.qtd_diarias, e.ativo);
             achou = 1;
         }
@@ -586,9 +590,9 @@ void test_case_insensitive_search() {
 void test_calculo_datas() {
     printf("\nTeste 2: Calculo de Datas\n");
 
-    assert(diff_days(20241201, 20241205) == 4);
-    assert(diff_days(20241201, 20241201) == 0);
-    assert(diff_days(20241201, 20241202) == 1);
+    assert(diff_days(15122024, 19122024) == 4);
+    assert(diff_days(10122024, 10122024) == 0);
+    assert(diff_days(10122024, 11122024) == 1);
 
     printf(" Teste de calculo de datas passou!\n");
 }
@@ -647,10 +651,10 @@ void test_cadastro_quarto() {
 void test_sobreposicao_periodos() {
     printf("\nTeste 5: Sobreposicao de Periodos\n");
 
-    assert(periodo_sobrepoe(20241201, 20241205, 20241203, 20241207) == 1);
-    assert(periodo_sobrepoe(20241201, 20241205, 20241206, 20241210) == 0);
-    assert(periodo_sobrepoe(20241201, 20241205, 20241204, 20241205) == 1);
-    assert(periodo_sobrepoe(20241201, 20241205, 20241128, 20241202) == 1);
+    assert(periodo_sobrepoe(10122024, 15122024, 13122024, 18122024) == 1);
+    assert(periodo_sobrepoe(10122024, 15122024, 16122024, 20122024) == 0);
+    assert(periodo_sobrepoe(10122024, 15122024, 14122024, 15122024) == 1);
+    assert(periodo_sobrepoe(10122024, 15122024, 8122024, 12122024) == 1);
 
     printf(" Teste de sobreposicao de periodos passou!\n");
 }
