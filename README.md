@@ -125,9 +125,9 @@ Calcular pontos de fidelidade
 
 -[x]Menu principal-
 
--[x]Testes Automatizados (PENDENTE)
+-[x]Testes Automatizados 
 
--[x]Limpeza de Dados (PENDENTE)
+-[x]Limpeza de Dados 
 
 Sprints do Projeto (Daniel, Vinicius e Marco)
 
