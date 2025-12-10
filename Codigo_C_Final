@@ -82,6 +82,7 @@ int ddmmaaaa_to_time_days(int ddmmaaaa) {
 int diff_days(int d1, int d2) {
     int days1 = ddmmaaaa_to_time_days(d1);
     int days2 = ddmmaaaa_to_time_days(d2);
+    if (days1 == 0 || days2 == 0) return 0;
     return days2 - days1;
 }
 
@@ -576,6 +577,14 @@ void restaurar_arquivo(const char* nome_real, const char* nome_teste) {
     }
 }
 
+void limpar_arquivos() {
+    remove(CLIENTES_FILE);
+    remove(FUNC_FILE);
+    remove(QUARTOS_FILE);
+    remove(ESTADIAS_FILE);
+    printf("Todos os arquivos de dados foram removidos.\n");
+}
+
 void test_case_insensitive_search() {
     printf("\nTeste 1: Busca Case-Insensitive\n");
 
@@ -782,7 +791,8 @@ void menu() {
         printf("10. Listar estadias de um cliente\n");
         printf("11. Calcular pontos fidelidade\n");
         printf("12. Executar testes automatizados\n");
-        printf("13. Sair\n\n");
+        printf("13. Limpar arquivos de dados\n");
+        printf("14. Sair\n\n");
 
         printf("Escolha: ");
         if(scanf("%d", &opc) != 1) {
@@ -806,11 +816,12 @@ void menu() {
             case 10: listar_estadias_cliente(); break;
             case 11: calcular_pontos_fidelidade(); break;
             case 12: executar_testes_automatizados(); break;
-            case 13: printf("Saindo...\n"); return;
+            case 13: limpar_arquivos(); break;
+            case 14: printf("Saindo...\n"); return;
             default: printf("Opcao invalida.\n");
         }
 
-        if(opc != 12) {
+        if(opc != 12 && opc != 13) {
             printf("\nOperacao concluida. Pressione ENTER para voltar ao menu...");
             getchar();
         }
