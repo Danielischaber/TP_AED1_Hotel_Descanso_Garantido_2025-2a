@@ -8,215 +8,281 @@ Algoritmos e Estruturas de Dados I (AEDs I)
 
 PUC Minas – Engenharia de Software
 
-O projeto está sendo desenvolvido, testado e executado no Code::Blocks (MinGW), utilizando arquivos binários para persistência e uma arquitetura modular.
+O projeto esta sendo desenvolvido, testado e executado no Code::Blocks (MinGW), utilizando arquivos binários para persistência e uma arquitetura modular.
 
-**Descrição Geral do Sistema**
+Descrição Geral do Sistema
 
-O sistema permite gerenciar:
+--O sistema deve permite gerenciar:--
 
-- Clientes
-  
-- Funcionários
-  
-- Quartos
-  
-- Estadias
-  
-- Cálculo de diárias
-  
-- Fidelidade por diárias
-  
-- Pesquisas por código ou nome
-  
-- Testes automatizados
-  
-- Limpeza de dados
-  
+Clientes
+
+Funcionários
+
+Quartos
+
+Estadias
+
+Cálculo de diárias
+
+Fidelidade por diárias
+
+Pesquisas por código ou nome
 
 Todo o armazenamento é realizado em:
 
-- clientes.dat
-  
-- funcionarios.dat
-  
-- quartos.dat
-  
-- estadias.dat
+clientes.dat
 
-**Funcionalidades Implementadas**
+funcionarios.dat
 
-Cadastro:
+quartos.dat
 
-[x] cadastrar_cliente()
-
-[x] cadastrar_funcionario()
-
-[x] cadastrar_quarto()
-
-[x] cadastrar_estadia()
-
-Estadia:
-
-[x] Busca automática de quarto compatível
-
-[x] Verifica sobreposição de períodos
-
-[x] Cálculo automático de diárias (diff_days())
-
-[x] Atualização de status do quarto
+estadias.dat
 
 
-Baixa de Estadia:
+--Ambiente de Desenvolvimento--
 
-[x] Cálculo automático do valor total
+Este projeto esta sendo projetado e testado no Code::Blocks 20.03 (Windows / MinGW-GCC).
 
-[x] Atualiza status para "desocupado"
+O Code::Blocks cuida automaticamente de:
 
-Pesquisas e Relatórios:
+Criação do executável (.exe)
 
-[x] Busca por nome/código (cliente/funcionário)
+Configuração do compilador
 
-[x] Listar estadias por cliente
+Inclusão das bibliotecas padrão
 
-[x] Calcular pontos de fidelidade
+Execução do programa pelo botão Build & Run (F9)
 
-Utilitários:
+Como rodar o projeto no Code::Blocks:
 
-[x] Limpeza de arquivos de dados
+Abra o Code::Blocks
 
-[x] Testes automatizados
+Clique em File → New → Project → Console Application → C
 
-**Backlog do Produto**
+Cole o código do main.c
 
-[x] Cadastro de cliente
+Salve o projeto
 
-[x] Cadastro de funcionário
+Clique Build & Run (F9)
 
-[x] Cadastro de quarto
+ Não é necessário usar terminal ou comando gcc no Windows. O Code::Blocks resolve tudo.
 
-[x] Cadastro de estadia
+--Funcionalidades Implementadas--
+ 
+ Cadastro
 
-[x] Cálculo de diárias
+[x]cadastrar_cliente()
 
-[x] Baixa de estadia
+[x]cadastrar_funcionario()
 
-[x] Pesquisas por nome e código
+[x]cadastrar_quarto()
 
-[x] Fidelidade
+[x] Estadia
 
-[x] Relatórios
+Busca automática de quarto compatível
 
-[x] Persistência em arquivos binários
+Verifica sobreposição de períodos
 
-[x] Menu principal
+Cálculo automático de diárias (diff_days())
 
-[x] Testes automatizados
+Atualização de status do quarto
 
-[x] Limpeza de dados
+[x] Baixa de Estadia
 
-**Sprints do Projeto (Daniel, Vinicius e Marco)**
+Cálculo automático do valor total
 
-Sprint 1 – Base e Cadastros
+Atualiza status para “desocupado”
 
-Daniel:
+[x] Pesquisas e Relatórios
 
-[x] Estruturas (struct)
+Busca por nome/código (cliente/funcionário)
 
-[x] Arquivos .dat
+Listar estadias por cliente
 
-[x] Cadastro de clientes
+Calcular pontos de fidelidade
 
-[x] Código automático
+--Backlog do Produto--
 
-[x] Caso de teste de cliente
+-[x]Cadastro de cliente-
 
-[x] Função case_insensitive_search()
+-[X]Cadastro de funcionário-
 
-Vinicius:
+-[x]Cadastro de quarto-
 
-[x] Cadastro de funcionário
+-[x]Cadastro de estadia-
 
-[x] Validação de código
+-[x]Cálculo de diárias-
 
-[x] Teste do módulo
+-[x]Baixa de estadia-
 
-Marco:
+-[x]Pesquisas por nome e código-
 
-[x] Cadastro de quarto
+-[x]Fidelidade-
 
-[x] Validação de número
+-[x]Relatórios-
 
-[x] Status inicial
+-[x]Persistência em arquivos binários-
 
-[x] Teste do módulo
+-[x]Menu principal-
+
+-[]Testes Automatizados (PENDENTE)
+
+-[]Limpeza de Dados (PENDENTE)
+
+Sprints do Projeto (Daniel, Vinicius e Marco)
+
+ Sprint 1 – Base e Cadastros
+
+![sprint 1](https://github.com/user-attachments/assets/4bf7010d-e9d6-446a-aea1-41e3fe0f1878)
+
+ Daniel
+
+-[x]Estruturas (struct)
+
+-[x]Arquivos .dat
+
+-[x]Cadastro de clientes
+
+-[x]Código automático
+
+-[x]Caso de teste de cliente
+
+-[x]Função case_insensitive_search()
+
+ Vinicius
+
+-[X]Cadastro de funcionário
+
+-[X]Validação de código
+
+-[X]Teste do módulo
+
+ Marco
+
+-[x]Cadastro de quarto
+
+-[x]Validação de número
+
+-[x]Status inicial
+
+-[x]Teste do módulo
 
 Sprint 2 – Lógica Avançada
 
-Daniel:
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9a08f1e5-9b34-4d79-8794-320f11ce76c0" />
 
-[x] Cadastro de estadia
+ Daniel
 
-[x] Verificação de disponibilidade
-[x] diff_days()
+-[x]Cadastro de estadia
 
-[x] encontrar_quarto_disponivel()
+-[x]Verificação de disponibilidade
 
-[x] Atualização de status
+-[x]diff_days()
 
-[x] Teste da função
+-[x]encontrar_quarto_disponivel()
 
-Vinicius:
+-[x]Atualização de status
 
-[x] Baixa de estadia
+-[x]Teste da função
 
-[x] Cálculo de valor total
+ Vinicius
 
-[x] Atualização de status
+-[x]Baixa de estadia
 
-[x] Testes
+-[x]Cálculo de valor total
 
-Marco:
+-[x]Atualização de status
 
-[x] Pesquisas (cliente/funcionário)
+-[x]Testes
 
-[x] Relatórios
+ Marco
 
-[x] Fidelidade
+-[x]Pesquisas (cliente/funcionários-
 
-[x] Testes
+-[x]Relatórios
 
-[x] Limpeza de arquivos
+-[x]Fidelidades
 
-**Testes Automatizados**
+-[x]Testes
+
+Sprint 3 finalização e qualidade
+
+ Daniel 
+
+-[]Testes Automatizados
+
+ Vinicius 
+
+ -[]Limpeza de Dados
+
+ Marco
+ 
+ -[]Revisão e entrega final do projeto
+
+--Como Executar no Code::Blocks--
+
+-Método recomendado:-
+
+-Abrir o projeto .cbp (ou criar um novo)
+
+-Criar/abrir o arquivo main.c
+
+-Adicionar o código completo
+
+-Pressionar F9 para compilar e executar
+
+--Casos de testes--
+
+- Teste de Cadastros Básicos:
+  
+ 1. Execute e verifique se os arquivos .dat são criados
+    
+ 2. Teste cadastro de 3 clientes, 2 funcionários, 5 quartos
+    
+- Teste de Estadia:
+- 
+ 1. Cadastre um cliente
+    
+ 2. Cadastre um quarto disponível
+   
+ 3. Crie uma estadia
+ 
+ 4. Verifique se o status do quarto mudou para "ocupado"
+    
+- Teste de Pesquisa
+  
+ Pesquise um cliente pelo nome (case insensitive)
+
+ Verifique se retorna os dados corretos
+
+ [x]--Testes Automatizados--
 
 Teste 1: Busca Case-Insensitive
 
-Teste 2: Cálculo de Datas (formato DDMMAAAA)
+Teste 2: Calculo de Datas
 
 Teste 3: Cadastro de Cliente
 
 Teste 4: Cadastro de Quarto
 
-Teste 5: Sobreposição de Períodos
+Teste 5: Sobreposicao de Periodos
 
-Teste 6: Cadastro de Funcionário
+Teste 6: Sobreposicao de Periodos
 
-Teste 7: Cálculo de Pontos de Fidelidade
+Teste 7: Calculo de Pontos de Fidelidade
 
 Teste 8: Status do Quarto
 
-**Formato de Datas**
+--Observações:--
 
-- Todas as datas no sistema usam formato DDMMAAAA (dia/mês/ano)
-  
-- Exemplo: 15/12/2024 é armazenado como 15122024
-  
-- Função principal: ddmmaaaa_to_time_days()
+Os arquivos .dat serão criados automaticamente na pasta do executável
 
-**Integrantes**
+Caso queira limpar os dados, basta excluir os .dat
 
-Daniel Ischaber Xavier
+O console é limpo com system("cls") automaticamente (Windows)
 
-Vinicius Daniel Santos
+ --Integrantes--
 
+Daniel Ischaber Xavier/
+Vinicius Daniel/
 Marco Túlio Sales de Deus
