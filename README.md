@@ -125,9 +125,9 @@ Calcular pontos de fidelidade
 
 -[x]Menu principal-
 
--[]Testes Automatizados (PENDENTE)
+-[x]Testes Automatizados (PENDENTE)
 
--[]Limpeza de Dados (PENDENTE)
+-[x]Limpeza de Dados (PENDENTE)
 
 Sprints do Projeto (Daniel, Vinicius e Marco)
 
@@ -209,15 +209,15 @@ Sprint 3 finalização e qualidade
 
  Daniel 
 
--[]Testes Automatizados
+-[x]Testes Automatizados
 
  Vinicius 
 
- -[]Limpeza de Dados
+ -[x]Limpeza de Dados
 
  Marco
  
- -[]Revisão e entrega final do projeto
+ -[x]Revisão e entrega final do projeto
 
 --Como Executar no Code::Blocks--
 
